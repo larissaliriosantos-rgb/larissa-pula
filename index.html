@@ -5,10 +5,77 @@
 <title>Larissa Pula</title>
 <style>
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  /* FUNDO DO JOGO */
+#game {
+  width: 900px;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(#7ec850, #3c7a2b);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+/* CAMADAS DA FLORESTA */
+.layer {
+  position: absolute;
+  bottom: 80px;
+  width: 200%;
+  height: 250px;
+  background-repeat: repeat-x;
+  animation: moveBg 30s linear infinite;
+}
+
+.layer.back {
+  background: linear-gradient(#4a7a3c, #355f2a);
+  opacity: 0.4;
+  animation-duration: 60s;
+}
+
+.layer.front {
+  background: linear-gradient(#2f5f1f, #1e3f15);
+  bottom: 80px;
+}
+
+/* CHÃO */
+#ground {
+  height: 90px;
+  background: linear-gradient(#5a3a1a, #3b240f);
+}
+
+/* PERSONAGEM */
+#player {
+  width: 65px;
+  height: 85px;
+  background: linear-gradient(#ffe066, #f4b400);
+  border-radius: 12px;
+  box-shadow: 0 10px 0 rgba(0,0,0,0.3);
+  animation: run 0.4s infinite alternate;
+}
+
+/* OBSTÁCULO */
+.obstacle {
+  width: 55px;
+  height: 75px;
+  background: linear-gradient(#7a4a22, #3b240f);
+  border-radius: 10px;
+}
+
+/* PONTUAÇÃO */
+#score {
+  font-size: 26px;
+  font-weight: bold;
+  color: #fff;
+}
+
+@keyframes moveBg {
+  from { background-position-x: 0; }
+  to { background-position-x: -1000px; }
+}
+
+@keyframes run {
+  from { transform: translateY(0); }
+  to { transform: translateY(3px); }
 }
 
 body {
