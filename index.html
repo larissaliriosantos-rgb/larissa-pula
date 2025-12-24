@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Larissa Pula</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: linear-gradient(#1c3f1c, #0e1f0e);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#game {
+  width: 900px;
+  height: 400px;
+  background: linear-gradient(#2e6b2e, #1b3f1b);
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+}
+
+/* chão */
+#ground {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+  background: repeating-linear-gradient(
+    90deg,
+    #3b2a18 0px,
+    #3b2a18 30px,
+    #4a3520 30px,
+    #4a3520 60px
+  );
+}
+
+/* personagem */
+#player {
+  position: absolute;
+  bottom: 80px;
+  left: 120px;
+  width: 60px;
+  height: 80px;
+  background: linear-gradient(#ffd966, #e6b800);
+  border-radius: 10px;
+}
+
+/* obstáculo */
+.obstacle {
+  position: absolute;
+  bottom: 80px;
+  width: 50px;
+  height: 70px;
+  background: linear-gradient(#5a3a1a, #3a240f);
+  border-radius: 6px;
+}
+
+/* pontuação */
+#score {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  color: #fff;
+  font-size: 22px;
+  text-shadow: 2px 2px 4px #000;
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+  <div id="score">0</div>
+  <div id="player"></div>
+  <div id="ground"></div>
+</div>
+
+<script>
+const player = document.getElementById("player");
+const game = document.getElementById("game");
+const scoreText = document.getElementById("score");
+
+let isJumping = false;
+let gravity = 0.9;
+let velocity = 0;
+let score = 0;
+
+function jump() {
+  if (!isJumping) {
+    velocity = 18;
+    isJumping = true;
+  }
+}
+
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") jump();
+});
+document.addEventListener("click", jump);
+document.addEventListener("touchstart", jump);
+
+function createObstacle() {
+  const obstacle = document.createElement("div");
+  obstacle.classList.add("obstacle");
+  obstacle.style.left = "900px";
+  game.appendChild(obstacle);
+
+  let moveInterval = setInterval(() => {
+    let left = parseInt(obstacle.style.left);
+
+    if (left < -50) {
+      obstacle.remove();
+      clearInterval(moveInterval);
+      score++;
+      scoreText.textContent = score;
+    } else {
+      obstacle.style.left = left - 6 + "px";
+    }
+
+    // colisão
+    const playerRect = player.getBoundingClientRect();
+    const obstacleRect = obstacle.getBoundingClientRect();
+
+    if (
+      playerRect.left < obstacleRect.right &&
+      playerRect.right > obstacleRect.left &&
+      playerRect.bottom > obstacleRect.top &&
+      playerRect.top < obstacleRect.bottom
+    ) {
+      alert("💥 Game Over! Pontuação: " + score);
+      location.reload();
+    }
+
+  }, 20);
+}
+
+setInterval(createObstacle, 2000);
+
+function gameLoop() {
+  if (isJumping) {
+    velocity -= gravity;
+    let bottom = parseInt(getComputedStyle(player).bottom);
+
+    if (bottom <= 80) {
+      bottom = 80;
+      isJumping = false;
+    }
+
+    player.style.bottom = bottom + velocity + "px";
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
+
+</body>
+</html>
